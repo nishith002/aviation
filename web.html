@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIS Academy | Aviation & Medical Education</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --navy: #0A192F; --sky: #0ea5e9; --bg: #f8fafc; --text-main: #334155; --text-light: #64748b; --border: #e2e8f0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, sans-serif; line-height: 1.6; color: var(--text-main); background: var(--bg); overflow-x: hidden; scroll-behavior: smooth; }
+
+        /* SLEEK TRANSITIONS */
+        .page { display: none; }
+        .page.active { display: block; animation: sleekFade 0.4s ease-out forwards; }
+        @keyframes sleekFade { 0% { opacity: 0; transform: translateY(15px); } 100% { opacity: 1; transform: translateY(0); } }
+
+        /* NAVIGATION BAR */
+        nav { background: rgba(255, 255, 255, 0.98); padding: 0.8rem 5%; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; top: 35px; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.04); backdrop-filter: blur(10px); }
+        .urgency { background: #fbbf24; color: var(--navy); padding: 8px; text-align: center; font-weight: 700; font-size: 0.85rem; position: fixed; top:0; width:100%; z-index: 1001; }
+        .logo-container { display: flex; align-items: center; gap: 12px; cursor: pointer;}
+        .logo-img { height: 45px; object-fit: contain; }
+        .logo-text { font-size: 1.3rem; font-weight: 800; color: var(--navy); letter-spacing: -0.5px; }
+
+        .nav-links { display: flex; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--text-main); margin: 0 12px; font-weight: 600; font-size: 0.9rem; transition: 0.2s; cursor: pointer; }
+        .nav-links a:hover { color: var(--sky); }
+
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content { display: none; position: absolute; background-color: #fff; min-width: 180px; box-shadow: 0px 10px 30px rgba(0,0,0,0.06); z-index: 1; border-radius: 8px; overflow: hidden; top: 100%; left: 0; border: 1px solid var(--border); animation: dropAnim 0.2s ease forwards; transform-origin: top; }
+        @keyframes dropAnim { from { opacity: 0; transform: scaleY(0.95); } to { opacity: 1; transform: scaleY(1); } }
+        .dropdown-content a { padding: 12px 20px; display: block; border-bottom: 1px solid var(--bg); }
+        .dropdown-content a:hover { background-color: var(--bg); color: var(--sky); padding-left: 25px; }
+        .dropdown:hover .dropdown-content { display: block; }
+
+        .btn { padding: 14px 28px; border-radius: 8px; font-weight: 700; transition: 0.3s; display: inline-block; cursor: pointer; border: none; font-size: 0.95rem; text-align:center; }
+        .btn-primary { background: var(--sky); color: white; }
+        .btn-primary:hover { background: #0284c7; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(14, 165, 233, 0.3); }
+
+        /* REDESIGNED SPLIT HERO */
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #fff; padding: 140px 5% 60px; position: relative; overflow: hidden; border-bottom: 1px solid var(--border); }
+        .hero-container { display: flex; align-items: center; justify-content: space-between; gap: 50px; max-width: 1400px; width: 100%; margin: 0 auto; z-index: 2; flex-wrap: wrap; }
+        .hero-text { flex: 1; min-width: 320px; text-align: left; }
+        .hero-text h1 { font-size: clamp(2.5rem, 4vw, 3.8rem); line-height: 1.15; font-weight: 800; color: var(--navy); margin-bottom: 20px; }
+        .hero-text h1 span { color: var(--sky); }
+        .hero-text p { font-size: 1.15rem; color: var(--text-main); margin-bottom: 35px; line-height: 1.7; max-width: 600px; }
+        .hero-image-box { flex: 1; min-width: 320px; display: flex; justify-content: center; position: relative; }
+        .hero-img-element { width: 100%; max-width: 650px; height: auto; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); object-fit: cover; }
+        @media (max-width: 1000px) { .hero-container { flex-direction: column-reverse; text-align: center; } .hero-text { text-align: center; } .hero-text p { margin: 0 auto 35px auto; } }
+
+        section { padding: 90px 5%; }
+        .section-title { font-size: 2.2rem; color: var(--navy); margin-bottom: 15px; font-weight: 800; }
+        .section-subtitle { color: var(--text-light); margin-bottom: 50px; font-size: 1.1rem; }
+        
+        .team-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
+        .team-card { width: 260px; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+        .team-img-wrapper { height: 300px; overflow: hidden; }
+        .team-img-wrapper img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+        .team-info { padding: 20px; text-align: center; }
+        .team-info h3 { color: var(--navy); font-size: 1.1rem; margin-bottom: 5px; }
+
+        /* INTERNAL LAYOUT */
+        .int-header { padding: 130px 5% 70px; background: linear-gradient(135deg, var(--navy) 0%, #0f2a52 100%); color: white; text-align: center; background-size: cover; background-position: center; transition: 0.5s; }
+        .int-header h1 { font-size: 3rem; font-weight: 800; margin-bottom: 15px; }
+        .int-header p { font-size: 1.15rem; color: #cbd5e1; max-width: 700px; margin: 0 auto; }
+        
+        .int-container { padding: 60px 5% 100px; max-width: 1250px; margin: 0 auto; display: flex; gap: 40px; align-items: flex-start; }
+        .int-main { flex: 1; background: white; padding: 45px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.02); }
+        .int-sidebar { width: 380px; position: sticky; top: 120px; flex-shrink: 0; }
+        @media (max-width: 1000px) { .int-container { flex-direction: column; } .int-sidebar { width: 100%; position: static; } .nav-links { display: none; } }
+
+        .int-main h2 { color: var(--navy); font-size: 1.8rem; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .int-main p { font-size: 1.05rem; color: var(--text-main); margin-bottom: 20px; line-height: 1.7; }
+        
+        /* NEW COLLEGE GRID (Image based) */
+        .clg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; margin-bottom: 40px; }
+        .clg-card { background: white; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column; }
+        .clg-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.08); border-color: var(--sky); }
+        .clg-img { height: 180px; background: #e2e8f0; position: relative; }
+        .clg-img img { width: 100%; height: 100%; object-fit: cover; }
+        .pulse-tag { position: absolute; top: 15px; right: 15px; background: #16a34a; color: white; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; animation: pulseGreen 2s infinite; }
+        @keyframes pulseGreen { 0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.5); } 70% { box-shadow: 0 0 0 10px rgba(22, 163, 74, 0); } 100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); } }
+        .clg-info { padding: 20px; flex: 1; display:flex; flex-direction:column; justify-content:space-between; }
+        .clg-info h4 { color: var(--navy); font-size: 1.15rem; margin-bottom: 10px; line-height: 1.4; }
+        .read-more { color: var(--sky); font-weight: 700; font-size: 0.9rem; margin-top: 10px; }
+
+        /* FEATURES & BANNERS */
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .feature-box { background: var(--bg); padding: 20px; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: flex-start; gap: 12px; }
+        .feature-box i { color: #16a34a; font-size: 1.2rem; margin-top: 3px; }
+        .custom-list { list-style: none; margin-left: 0; margin-bottom: 25px; }
+        .custom-list li { padding-left: 28px; position: relative; margin-bottom: 12px; font-size: 1.05rem; }
+        .custom-list li::before { content: '→'; position: absolute; left: 0; color: var(--sky); font-weight: bold; font-size: 1.2rem; }
+        
+        .blue-banner { background: var(--sky); border-radius: 16px; padding: 40px; text-align: center; color: white; margin-top: 30px; box-shadow: 0 10px 30px rgba(14, 165, 233, 0.2); }
+        .blue-banner h3 { font-size: 1.8rem; margin-bottom: 15px; }
+        .blue-banner p { font-size: 1.1rem; margin-bottom: 25px; opacity: 0.9; }
+        .blue-banner .btn { background: white; color: var(--sky); padding: 14px 35px; border-radius: 8px; font-weight: 700; }
+
+        .fee-banner { background: var(--navy); color: white; border-radius: 12px; padding: 30px; margin-bottom: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; box-shadow: 0 15px 30px rgba(10,25,47,0.2); }
+        .fee-item h4 { color: var(--sky); font-size: 0.9rem; text-transform: uppercase; margin-bottom: 5px; }
+        .fee-item p { font-size: 1.5rem; font-weight: 700; margin:0 !important; color: white !important; }
+
+        /* SIDEBAR FORM */
+        .side-form-card { background: white; border-radius: 16px; padding: 35px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); border: 2px solid #f1f5f9; }
+        .side-form-card h3 { color: var(--navy); font-size: 1.5rem; margin-bottom: 5px; font-weight: 800; }
+        .side-form-card p { color: var(--sky); font-size: 0.95rem; margin-bottom: 25px; font-weight: 600; }
+        .side-form-card .form-group { margin-bottom: 18px; }
+        .side-form-card label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+        .side-form-card label span { color: #dc2626; }
+        .side-form-card input, .side-form-card select { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; font-family: inherit; transition: 0.3s; }
+        .side-form-card input:focus, .side-form-card select:focus { outline: none; border-color: var(--sky); box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15); }
+        
+        /* FOOTER & WHATSAPP */
+        .site-footer { background: #060e17; color: #cbd5e1; padding: 80px 5% 30px; margin-top: auto; }
+        .footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; max-width: 1250px; margin: 0 auto; margin-bottom: 60px; }
+        @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr; } }
+        .footer-col h3 { color: white; margin-bottom: 25px; font-size: 1.3rem; }
+        .footer-col p { margin-bottom: 18px; font-size: 0.95rem; display: flex; align-items: flex-start; gap: 12px; line-height: 1.6; }
+        .footer-col p strong { color: white; margin-right: 5px; }
+        .footer-col p i { color: var(--sky); margin-top: 4px; font-size: 1.1rem; }
+        .footer-bottom { text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 25px; font-size: 0.85rem; color: #94a3b8; }
+        .wa-float { position: fixed; bottom: 30px; right: 30px; background: #25d366; color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 34px; box-shadow: 0 10px 25px rgba(37,211,102,0.4); z-index: 999; text-decoration: none; transition: 0.3s; }
+        .wa-float:hover { transform: scale(1.1) rotate(-5deg); box-shadow: 0 15px 35px rgba(37,211,102,0.5); }
+
+        /* EXACT MODAL */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; padding: 20px; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.show { opacity: 1; display: flex; }
+        .modal-content { background: #ffffff; border-radius: 12px; width: 100%; max-width: 520px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); transform: translateY(-20px); transition: 0.3s; display: flex; flex-direction: column; overflow: hidden; max-height: 90vh; }
+        .modal-overlay.show .modal-content { transform: translateY(0); }
+        .modal-header { background: #0b162c; color: white; padding: 22px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h2 { font-size: 1.35rem; font-weight: 700; margin: 0; }
+        .close-modal { background: rgba(255,255,255,0.15); width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; border: none; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
+        .close-modal:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
+        .modal-body { padding: 35px 30px; overflow-y: auto; }
+        .modal-body .form-group { margin-bottom: 22px; }
+        .modal-body label { display: block; font-weight: 700; font-size: 0.95rem; color: #1e293b; margin-bottom:8px;}
+        .modal-body label span { color: #dc2626; }
+        .modal-body input, .modal-body select { width: 100%; padding: 14px 16px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; color: #0f172a; transition: 0.2s; }
+        .modal-body input:focus, .modal-body select:focus { outline: none; border-color: var(--sky); box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15); }
+    </style>
+</head>
+<body>
+    <div class="urgency">✨ ENROLLMENT OPEN FOR 2026 BATCH! SECURE YOUR SEAT EARLY.</div>
+
+    <nav>
+        <a onclick="navigate('page-home')" class="logo-container">
+            <img class="logo-img" src="https://www.cismbbs.com/assets/images/cis-logo.png" alt="CIS Academy Logo">
+            <span class="logo-text">CIS Academy</span>
+        </a>
+        <div class="nav-links">
+            <a onclick="navigate('page-home')">Home</a>
+            <a onclick="navigateAndScroll('page-home', 'about')">About Us</a>
+            <div class="dropdown">
+                <a>MBBS Abroad <i class="fas fa-chevron-down" style="font-size: 0.7em;"></i></a>
+                <div class="dropdown-content">
+                    <a onclick="navigate('page-russia')">Russia</a>
+                    <a onclick="navigate('page-uzbekistan')">Uzbekistan</a>
+                    <a onclick="navigate('page-kazakhstan')">Kazakhstan</a>
+                    <a onclick="navigate('page-kyrgyzstan')">Kyrgyzstan</a>
+                </div>
+            </div>
+            <a onclick="navigate('page-study')">Study Abroad</a>
+            <a onclick="navigate('page-partner')">Partner with Us</a>
+            <a onclick="navigateAndScroll('page-home', 'team')">Our Team</a>
+        </div>
+        <a onclick="openFormModal(event)" class="btn btn-primary" style="padding: 10px 24px; font-size: 0.85rem;">JOIN NOW</a>
+    </nav>
+
+    <div id="app-content" style="padding-top: 35px;">
+
+        <!-- HOME PAGE -->
+        <div id="page-home" class="page active">
+            <section class="hero">
+                <div class="hero-container">
+                    <div class="hero-text">
+                        <h1>Start Your <span>Global<br>Medical Career</span> Today</h1>
+                        <p>India's leading educational consultancy bridging the gap between your ambition and top international medical universities. We specialize in transforming medical aspirations into reality.</p>
+                        <a onclick="openFormModal(event)" class="btn btn-primary" style="padding: 18px 38px; font-size: 1.1rem; box-shadow: 0 10px 25px rgba(14,165,233,0.3);">Apply Now For 2026</a>
+                    </div>
+                    <div class="hero-image-box">
+                        <img src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?auto=format&fit=crop&q=80&w=1200" alt="Medical Student" class="hero-img-element">
+                    </div>
+                </div>
+            </section>
+            <section id="about" style="background: white;"><div style="max-width: 1250px; margin: 0 auto; display: flex; gap: 60px; flex-wrap: wrap;"><div style="flex: 1; min-width: 320px;"><h2 class="section-title" style="text-align: left;">Who We Are</h2><h3 style="color: var(--sky); font-size: 1.3rem; margin-bottom: 25px;">Your Compass for Global Education</h3><p style="font-size: 1.15rem; margin-bottom: 20px;">CIS Global Medical Education is India's premium educational consultancy, exploring decades of excellence facilitating admissions across Russia, Kazakhstan, Uzbekistan, and Kyrgyzstan.</p><a onclick="navigate('page-study')" class="btn btn-primary">Read More</a></div><div style="flex: 1; min-width: 320px; background: var(--bg); padding: 40px; border-radius: 20px;"><h3 style="color: var(--navy); margin-bottom: 30px; font-size: 1.5rem; text-align: center;">Our Key Pillars</h3><div style="display: flex; flex-direction: column; gap: 25px;"><div style="display: flex; gap: 20px;"><div style="background: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; flex-shrink: 0;"><i class="fas fa-plane-departure" style="font-size: 1.5rem; color: var(--sky);"></i></div><div><h4 style="color: var(--navy); font-size: 1.15rem;">End-to-End Admission</h4><p style="color: var(--text-light); font-size: 0.95rem;">Hassle-free visa and documentation.</p></div></div></div></div></div></section>
+            <section id="team" style="text-align: center;">
+                <h2 class="section-title">Our Leadership</h2>
+                <p class="section-subtitle">Experienced thought leaders dedicated to your success.</p>
+                <div class="team-grid">
+                    <div class="team-card"><div class="team-img-wrapper"><img src="https://www.cismbbs.com/assets/images/uploads/teams-image/satyajit.jpg"></div><div class="team-info"><h3>Dr. Satyajit Singh</h3><p style="color:var(--sky); font-weight:700; font-size:0.85rem;">Founder & President</p></div></div>
+                    <div class="team-card"><div class="team-img-wrapper"><img src="https://www.cismbbs.com/assets/images/uploads/teams-image/amit-vats.jpeg"></div><div class="team-info"><h3>Dr. Amitt Vatsa</h3><p style="color:var(--sky); font-weight:700; font-size:0.85rem;">Founder & President</p></div></div>
+                    <div class="team-card"><div class="team-img-wrapper"><img src="https://www.cismbbs.com/assets/images/uploads/teams-image/Elena.jpg"></div><div class="team-info"><h3>Elena Singh</h3><p style="color:var(--sky); font-weight:700; font-size:0.85rem;">CEO CIS Region</p></div></div>
+                    <div class="team-card"><div class="team-img-wrapper"><img src="https://www.cismbbs.com/assets/images/uploads/teams-image/gunnjan.jpg"></div><div class="team-info"><h3>Dr. Gunnjan Baajpai</h3><p style="color:var(--sky); font-weight:700; font-size:0.85rem;">CEO & MD</p></div></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- RUSSIA PAGE -->
+        <div id="page-russia" class="page">
+            <div class="int-header"><h1>MBBS in Russia</h1><p>World-renowned universities and elite medical research facilities.</p></div>
+            <div class="int-container">
+                <div class="int-main">
+                    <h2>Legacy of Excellence in Medicine</h2><p>Russian medical universities are renowned globally for their high academic standards and modern teaching methodologies.</p>
+                    <div class="clg-grid">
+                        <div class="clg-card" onclick="openCollege('kemerovo')"><div class="clg-img"><img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=600"><span class="pulse-tag">Admissions Open</span></div><div class="clg-info"><h4>Kemerovo State Medical University</h4><span class="read-more">View Full Details →</span></div></div>
+                        <div class="clg-card" onclick="openCollege('novosibirsk')"><div class="clg-img"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=600"><span class="pulse-tag">Admissions Open</span></div><div class="clg-info"><h4>Novosibirsk National Research U.</h4><span class="read-more">View Full Details →</span></div></div>
+                        <div class="clg-card" onclick="openCollege('kazan')"><div class="clg-img"><img src="https://images.unsplash.com/photo-1562774053-701939374163?auto=format&fit=crop&q=80&w=600"><span class="pulse-tag">Admissions Open</span></div><div class="clg-info"><h4>Kazan Federal University</h4><span class="read-more">View Full Details →</span></div></div>
+                    </div>
+                    <div class="blue-banner"><h3>Secure Your Seat in Russia</h3><p>Contact us to review university choices and fee structures.</p><a onclick="openFormModal(event)" class="btn">Start Application</a></div>
+                </div>
+                <div class="int-sidebar"><div class="side-form-card"><h3>Apply for Russia</h3><p>Submit details for instant counseling.</p><form onsubmit="handleFormSubmission(event)"><div class="form-group"><label>Full Name <span>*</span></label><input type="text" required></div><div class="form-group"><label>Mobile Number <span>*</span></label><input type="tel" required></div><button type="submit" class="btn btn-primary" style="width: 100%;">Apply Now</button></form></div></div>
+            </div>
+        </div>
+
+        <!-- UZBEKISTAN PAGE -->
+        <div id="page-uzbekistan" class="page">
+            <div class="int-header"><h1>MBBS in Uzbekistan</h1><p>High-quality medical education with intense clinical exposure.</p></div>
+            <div class="int-container">
+                <div class="int-main">
+                    <h2>A Premier Medical Hub</h2><p>Uzbekistan has rapidly become a favorite destination for Indian medical aspirants offering an intense clinical rotation setup.</p>
+                    <div class="clg-grid">
+                        <div class="clg-card" onclick="openCollege('samarkand')"><div class="clg-img"><img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=600"><span class="pulse-tag">Admissions Open</span></div><div class="clg-info"><h4>Samarkand State Medical University</h4><span class="read-more">View Full Details →</span></div></div>
+                        <div class="clg-card" onclick="openCollege('tashkent')"><div class="clg-img"><img src="https://images.unsplash.com/photo-1592280771190-3e2e4d571952?auto=format&fit=crop&q=80&w=600"><span class="pulse-tag">Admissions Open</span></div><div class="clg-info"><h4>Tashkent Medical Academy</h4><span class="read-more">View Full Details →</span></div></div>
+                        <div class="clg-card" onclick="openCollege('bukhara')"><div class="clg-img"><img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=600"><span class="pulse-tag">Admissions Open</span></div><div class="clg-info"><h4>Bukhara State Medical Institute</h4><span class="read-more">View Full Details →</span></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KAZAKHSTAN PAGE -->
+        <div id="page-kazakhstan" class="page">
+            <div class="int-header"><h1>MBBS in Kazakhstan</h1><p>Massive cost advantage with state-of-the-art facilities.</p></div>
+            <div class="int-container">
+                <div class="int-main">
+                    <h2>Balance of Standards & Affordability</h2><p>Kazakhstan provides top-tier education perfectly aligned with NMC screening tests.</p>
+                    <div class="clg-grid">
+                        <div class="clg-card" onclick="openCollege('kaznmu')"><div class="clg-img"><img src="https://images.unsplash.com/photo-1606761568499-6d2451b23c66?auto=format&fit=crop&q=80&w=600"><span class="pulse-tag">Admissions Open</span></div><div class="clg-info"><h4>Kazakh National Medical University</h4><span class="read-more">View Full Details →</span></div></div>
+                        <div class="clg-card" onclick="openCollege('skma')"><div class="clg-img"><img src="https://images.unsplash.com/photo-1519452328906-f6d0a7a7bb6e?auto=format&fit=crop&q=80&w=600"><span class="pulse-tag">Admissions Open</span></div><div class="clg-info"><h4>South Kazakhstan Medical Academy</h4><span class="read-more">View Full Details →</span></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- KYRGYZSTAN PAGE -->
+        <div id="page-kyrgyzstan" class="page">
+            <div class="int-header"><h1>MBBS in Kyrgyzstan</h1><p>An incredibly affordable route to an NMC respected degree.</p></div>
+            <div class="int-container">
+                <div class="int-main">
+                    <h2>Peak Return on Investment</h2><p>Kyrgyzstan offers exceptionally cheap tuitions and hostel fees without compromising WHO infrastructure norms.</p>
+                    <div class="clg-grid">
+                        <div class="clg-card" onclick="openCollege('osh')"><div class="clg-img"><img src="https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&q=80&w=600"><span class="pulse-tag">Admissions Open</span></div><div class="clg-info"><h4>Osh State University</h4><span class="read-more">View Full Details →</span></div></div>
+                        <div class="clg-card" onclick="openCollege('ami')"><div class="clg-img"><img src="https://images.unsplash.com/photo-1588072432836-e100327743d4?auto=format&fit=crop&q=80&w=600"><span class="pulse-tag">Admissions Open</span></div><div class="clg-info"><h4>Asian Medical Institute</h4><span class="read-more">View Full Details →</span></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STUDY ABROAD PAGE -->
+        <div id="page-study" class="page">
+            <div class="int-header"><h1>Study Abroad with CIS Global</h1><p>Your Gateway to World-Class Medical Education.</p></div>
+            <div class="int-container">
+                <div class="int-main">
+                    <h2>Comprehensive End-to-End Support</h2>
+                    <p>From exploring your career trajectory to meticulously selecting the right university and successfully processing your travel visa, CIS Global brings decade-long expertise to international student mobilization.</p>
+                    <h2 style="margin-top: 40px;">Our Support Structure</h2>
+                    <ul class="custom-list">
+                        <li><strong>Career Counseling:</strong> Unbiased evaluation to map the correct country and university to your academic profile.</li>
+                        <li><strong>Admission Processing:</strong> Timely application tracking and acquiring university invitation letters.</li>
+                        <li><strong>Visa & Forex:</strong> Robust support managing embassy visa documentation to prevent any rejections.</li>
+                        <li><strong>Travel & Housing:</strong> Guided travel groups to the target country and securing prime hostel placements upon arrival.</li>
+                    </ul>
+                    <div class="blue-banner"><h3>Let's Chart Your Journey</h3><a onclick="openFormModal(event)" class="btn">Book Free Counselling</a></div>
+                </div>
+                <div class="int-sidebar">
+                    <div class="side-form-card"><h3>Talk to an Expert</h3>
+                        <form onsubmit="handleFormSubmission(event)"><div class="form-group"><label>Full Name <span>*</span></label><input type="text" required></div><div class="form-group"><label>Mobile Number <span>*</span></label><input type="tel" required></div><button type="submit" class="btn btn-primary" style="width: 100%;">Request Call Back</button></form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PARTNER PAGE -->
+        <div id="page-partner" class="page">
+            <div class="int-header"><h1>Partner with CIS Global</h1><p>Let's grow together in international educational consulting.</p></div>
+            <div class="int-container">
+                <div class="int-main">
+                    <h2>Expansion & Business Growth</h2>
+                    <p>We actively invite driven educational agencies and counselors throughout India and beyond to collaborate with us. We handle the heavy backend lifting so you can focus locally on student acquisition and front-facing counseling.</p>
+                    <h2 style="margin-top: 40px;">Why Partner With Us?</h2>
+                    <ul class="custom-list">
+                        <li><strong>Direct Mandates:</strong> Gain access to official, signed university mandates globally.</li>
+                        <li><strong>Transparent Revenue:</strong> Highly attractive, transparent, and prompt revenue-sharing models.</li>
+                        <li><strong>B2B Support:</strong> An elite backend team driving documentation, apostille processing, and strict visa compliance.</li>
+                    </ul>
+                    <div class="blue-banner"><h3>Become an Official Agent</h3><a onclick="openFormModal(event)" class="btn">Connect with B2B Team</a></div>
+                </div>
+                <div class="int-sidebar">
+                    <div class="side-form-card"><h3>Partner Inquiry</h3>
+                        <form onsubmit="handleFormSubmission(event)"><div class="form-group"><label>Agency/Name <span>*</span></label><input type="text" required></div><div class="form-group"><label>Mobile Number <span>*</span></label><input type="tel" required></div><div class="form-group"><label>Location</label><input type="text"></div><button type="submit" class="btn btn-primary" style="width: 100%;">Submit Inquiry</button></form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= DYNAMIC COLLEGE PROFILE PAGE ================= -->
+        <div id="page-college" class="page">
+            <!-- Dynamic Inline Hero bg injected by JS -->
+            <div class="int-header" id="col-header-bg">
+                <h1 id="col-title" style="text-shadow: 0 4px 20px rgba(0,0,0,0.6);">College Name</h1>
+                <p id="col-country" style="background: var(--sky); display: inline-block; padding: 5px 15px; border-radius: 20px; color: white; font-weight: 700;">Location</p>
+            </div>
+            <div class="int-container">
+                <div class="int-main">
+                    <h2>About the University</h2>
+                    <p id="col-about" style="line-height: 1.8; color: var(--text-main); font-size: 1.05rem;"></p>
+                    
+                    <h2 style="margin-top: 40px;">Tuition & Fee Structure (2026 Batch)</h2>
+                    <div class="fee-banner">
+                        <div class="fee-item"><h4>Yearly Tuition</h4><p id="col-tuition">--</p></div>
+                        <div class="fee-item"><h4>Hostel & Mess</h4><p id="col-hostel">--</p></div>
+                        <div class="fee-item"><h4>Program Duration</h4><p id="col-duration">--</p></div>
+                        <div class="fee-item"><h4>Accreditations</h4><p id="col-accred">NMC, WHO</p></div>
+                    </div>
+
+                    <h2 style="margin-top: 40px;">Why Choose This University?</h2>
+                    <ul class="custom-list">
+                        <li>Globally verified medical curriculum recognized unconditionally.</li>
+                        <li>Fully English-taught medium designed closely for international students.</li>
+                        <li>Excellent clinical exposure in university-affiliated tertiary state hospitals.</li>
+                        <li>Modern, highly secure dormitory facilities offering Indian cuisine.</li>
+                    </ul>
+                    
+                    <div class="blue-banner">
+                        <h3>Secure Your Seat Instantly</h3>
+                        <p>Applications are processed on a strictly first-come, first-served basis.</p>
+                        <a onclick="openFormModal(event)" class="btn">Proceed With Fast-Track Application</a>
+                    </div>
+                </div>
+                <div class="int-sidebar">
+                    <div class="side-form-card">
+                        <h3>Apply to this College</h3>
+                        <p id="col-form-text">Directly apply</p>
+                        <form onsubmit="handleFormSubmission(event)">
+                            <div class="form-group"><label>Full Name <span>*</span></label><input type="text" required></div>
+                            <div class="form-group"><label>Mobile Number <span>*</span></label><input type="tel" required></div>
+                            <div class="form-group"><label>Academic Score (12th % PCB)</label><input type="text" placeholder="e.g. 85%"></div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Express Interest</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SITE FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <img src="https://www.cismbbs.com/assets/images/cis-logo.png" style="height:55px; background:white; padding:8px 12px; border-radius:8px; margin-bottom:25px;" alt="Logo">
+                <p>Education Elevates Wealth. Your journey to the skies and premier hospitals begins with world-class advising.</p>
+            </div>
+            <div class="footer-col" style="padding-top: 10px;">
+                <h3>Our Offices</h3>
+                <p><i class="fas fa-map-marker-alt"></i> <span><strong>India:</strong> 904/905, DLF City Court, Sikanderpur, MG Road, Gurugram, Haryana - 122002</span></p>
+                <p><i class="fas fa-map-marker-alt"></i> <span><strong>Kazakhstan:</strong> Street Center, Al Farabi, 1/1, Shymkent City - 160001, Kazakhstan</span></p>
+            </div>
+            <div class="footer-col" style="padding-top: 10px;">
+                <h3>Contact Details</h3>
+                <p><i class="fas fa-phone-alt"></i> <span>+91 98118 76779 (Admissions)</span></p>
+                <p><i class="fas fa-phone-alt"></i> <span>+91 90694 36072 (Partnerships)</span></p>
+                <p><i class="fas fa-envelope"></i> <span>admissions@cisacademy.com</span></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 CIS Global Education. All rights reserved. Designed for Excellence.
+        </div>
+    </footer>
+
+    <!-- MAIN FORM MODAL EXACT MATCH -->
+    <div class="modal-overlay" id="mainModal" onclick="checkModalClose(event)">
+        <div class="modal-content">
+            <div class="modal-header"><h2>Fast-Track Application</h2><button class="close-modal" onclick="closeFormModal()">×</button></div>
+            <div class="modal-body">
+                <form id="mainApplicationForm" onsubmit="handleFormSubmission(event)">
+                    <div class="form-group"><label>Full Name <span>*</span></label><input type="text" placeholder="Please enter your full name" required></div>
+                    <div class="form-group"><label>Mobile Number <span>*</span></label><input type="tel" placeholder="+91 xxxxx xxxxx" required></div>
+                    <div class="form-group"><label>Email Address</label><input type="email" placeholder="student@example.com"></div>
+                    <div class="form-group"><label>Preferred Destination / Program <span>*</span></label><select required><option value="">Select Option</option><option>Russia</option><option>Kazakhstan</option><option>Uzbekistan</option><option>Kyrgyzstan</option></select></div>
+                    <button type="submit" class="btn btn-primary">Submit Application</button>
+                    <div id="formSuccessMessage" style="display:none; color: #16a34a; background: #dcfce7; padding: 12px; border-radius: 8px; margin-top: 15px; font-weight: 700; text-align: center;"><i class="fas fa-check-circle"></i> Application Submitted Successfully!</div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <a href="https://wa.me/919811876779" class="wa-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+    <script>
+        const collegeDB = {
+            "kemerovo": { name: "Kemerovo State Medical University", country: "Russia", tuition: "$3,800 / year", hostel: "$500 / year", duration: "6 Years", accred: "NMC, WHO, ECFMG", bg: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=2000", about: "Kemerovo State Medical University is deeply recognized in Russia and globally for producing highly-skilled doctors. Established with immense historical roots, its sprawling campus features advanced laboratories, a dedicated diagnostic center, and an environment deeply conducive to research and academics." },
+            "novosibirsk": { name: "Novosibirsk National Research State U.", country: "Russia", tuition: "$4,100 / year", hostel: "$450 / year", duration: "6 Years", accred: "NMC, WHO", bg: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=2000", about: "Located in the heart of Siberia, Novosibirsk State is an elite research university known globally. It incorporates highly modernized teaching strategies, emphasizing deep practical training in federal surgical hospitals." },
+            "kazan": { name: "Kazan Federal University", country: "Russia", tuition: "$5,500 / year", hostel: "$600 / year", duration: "6 Years", accred: "NMC, WHO", bg: "https://images.unsplash.com/photo-1562774053-701939374163?auto=format&fit=crop&q=80&w=2000", about: "Kazan Federal University stands strictly among the oldest and most prestigious universities in Russia. Its medical faculty boasts phenomenal resources, incredible global diversity among students, and high NMC screening test passing frameworks." },
+            "samarkand": { name: "Samarkand State Medical University", country: "Uzbekistan", tuition: "$3,500 / year", hostel: "$400 / year", duration: "5 Years", accred: "NMC, WHO", bg: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=2000", about: "Samarkand State uniquely blends ancient architectural heritage with hyper-modern medical sciences. As the oldest medical institution in Central Asia, it strictly offers an English-taught curriculum focused heavily on intense hospital-based clinical training." },
+            "tashkent": { name: "Tashkent Medical Academy", country: "Uzbekistan", tuition: "$3,800 / year", hostel: "$500 / year", duration: "5 Years", accred: "NMC, WHO", bg: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?auto=format&fit=crop&q=80&w=2000", about: "Tashkent Medical Academy acts as a leading center for specialized medical training. Students obtain extensive practical exposure by operating directly in prominent capital-city government hospitals." },
+            "bukhara": { name: "Bukhara State Medical Institute", country: "Uzbekistan", tuition: "$3,300 / year", hostel: "$350 / year", duration: "5 Years", accred: "NMC, WHO", bg: "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=2000", about: "Ranked effectively for its exceptionally high-quality and low-cost structure. Bukhara State embraces international students rapidly thanks to its welcoming faculty and very low cost of living." },
+            "kaznmu": { name: "Kazakh National Medical University", country: "Kazakhstan", tuition: "$4,500 / year", hostel: "$600 / year", duration: "5 Years", accred: "NMC, WHO", bg: "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?auto=format&fit=crop&q=80&w=2000", about: "Often simply called KazNMU, it is the primary medical center of Kazakhstan situated in Almaty. It commands massive respect, possessing extensive anatomy labs, massive libraries, and an English-medium syllabus that is second to none." },
+            "skma": { name: "South Kazakhstan Medical Academy", country: "Kazakhstan", tuition: "$3,800 / year", hostel: "$450 / year", duration: "5 Years", accred: "NMC, WHO", bg: "https://images.unsplash.com/photo-1519452328906-f6d0a7a7bb6e?auto=format&fit=crop&q=80&w=2000", about: "Provides excellent education tightly aligned strictly with the European credit transfer system. Deeply affordable and features comprehensive clinical residency training directly partnered with major hospitals." },
+            "osh": { name: "Osh State University", country: "Kyrgyzstan", tuition: "$2,800 / year", hostel: "$300 / year", duration: "5 Years", accred: "NMC, WHO, FAIMER", bg: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&q=80&w=2000", about: "The most popular medical destination for Indian medical students in Kyrgyzstan. Known widely for offering extremely low tuition fees while completely fulfilling the strict requirements needed for NMC graduation conversions." },
+            "ami": { name: "Asian Medical Institute", country: "Kyrgyzstan", tuition: "$2,600 / year", hostel: "$250 / year", duration: "5 Years", accred: "NMC, WHO", bg: "https://images.unsplash.com/photo-1588072432836-e100327743d4?auto=format&fit=crop&q=80&w=2000", about: "The Asian Medical Institute targets foreign students directly. Its curriculum focuses extraordinarily on ensuring high first-attempt passing ratios natively on global screening tests like USMLE and FMGE." }
+        };
+
+        // SPA Navigation
+        function navigate(pageId) {
+            const target = document.getElementById(pageId);
+            if (!target) return;
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            setTimeout(() => { target.classList.add('active'); }, 20);
+        }
+
+        function navigateAndScroll(pageId, sectionId) {
+            const activePage = document.querySelector('.page.active');
+            const current = activePage ? activePage.id : '';
+            if(current === pageId) document.getElementById(sectionId).scrollIntoView({behavior: 'smooth'});
+            else { navigate(pageId); setTimeout(() => { document.getElementById(sectionId).scrollIntoView({behavior: 'smooth'}); }, 400); }
+        }
+
+        // Dynamic College Template Loader
+        function openCollege(clgKey) {
+            const data = collegeDB[clgKey];
+            if(!data) return;
+            document.getElementById('col-title').innerText = data.name;
+            document.getElementById('col-country').innerText = "📍 " + data.country;
+            document.getElementById('col-about').innerText = data.about;
+            document.getElementById('col-tuition').innerText = data.tuition;
+            document.getElementById('col-hostel').innerText = data.hostel;
+            document.getElementById('col-duration').innerText = data.duration;
+            document.getElementById('col-accred').innerText = data.accred;
+            document.getElementById('col-form-text').innerText = "Start application to " + data.name + ".";
+            const headerBg = document.getElementById('col-header-bg');
+            headerBg.style.backgroundImage = "linear-gradient(rgba(10,25,47,0.7), rgba(10,25,47,0.85)), url('" + data.bg + "')";
+            headerBg.style.backgroundSize = "cover";
+            headerBg.style.backgroundPosition = "center";
+            navigate('page-college');
+        }
+
+        // Form Submission Logic
+        function handleFormSubmission(e) { e.preventDefault(); alert("Application successfully submitted. We will contact you soon."); e.target.reset(); closeFormModal(); }
+
+        // Modal Logic
+        const modal = document.getElementById('mainModal');
+        function openFormModal(e) { if(e) e.preventDefault(); modal.classList.add('show'); document.body.style.overflow = 'hidden'; }
+        function closeFormModal() { modal.classList.remove('show'); document.body.style.overflow = 'auto'; }
+        function checkModalClose(e) { if (e.target === modal) closeFormModal(); }
+    </script>
+</body>
+</html>
